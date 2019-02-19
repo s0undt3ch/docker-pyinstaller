@@ -1,10 +1,14 @@
-FROM ubuntu:12.04
+FROM centos:6
 SHELL ["/bin/bash", "-i", "-c"]
 
-ARG PYTHON_VERSION=3.6.6
+# Target python version to build
+ARG PYTHON_VERSION=3.6.8
+# Target pyinstaller version
 ARG PYINSTALLER_VERSION=3.4
 
+# PYPI repository location
 ENV PYPI_URL=https://pypi.python.org/
+# PYPI index location
 ENV PYPI_INDEX_URL=https://pypi.python.org/simple
 
 COPY entrypoint.sh /entrypoint.sh
@@ -12,18 +16,20 @@ COPY entrypoint.sh /entrypoint.sh
 RUN \
     set -x \
     # update system
-    && apt-get update \
-    # install requirements
-    && apt-get install -y --no-install-recommends \
-        build-essential \
-        ca-certificates \
-        curl \
-        git \
-        libbz2-dev \
-        libreadline-dev \
-        libsqlite3-dev \
-        libssl-dev \
-        zlib1g-dev \
+    && yum install -y yum && yum update -y \
+    && yum install -y \
+      git \
+      readline-devel \
+      zlib-devel \
+      gcc \
+      sqlite-devel \
+      bzip2-devel \
+      openssl \
+      openssl-devel \
+      make \
+      patch \
+      gcc-c++ \
+      readline-devel \
     # install pyenv
     && echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc \
     && echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc \
